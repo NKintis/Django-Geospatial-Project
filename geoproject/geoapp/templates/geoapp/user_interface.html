@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html>
+{% load static %}
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'geoapp/css/styles.css' %}">
+<head>
+    <title>Docker Interface</title>
+ 
+    
+<script>
+function validateForm() {
+    var var3 = document.getElementById("var3").value;
+    var var4 = document.getElementById("var4").value;
+    var var5 = document.getElementById("var5").value;
+    var var6 = document.getElementById("var6").value;
+    var var7 = document.getElementById("var7").value;
+    var var8 = document.getElementById("var8").value;
+    var inputs = document.getElementsByTagName('input');
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].type == 'text' && inputs[i].value.trim() == '') {
+                    alert('Please fill in all the fields.');
+                    return false;
+                }
+            }
+ 
+    // Check if var3, var4, var5, var6 are numbers
+    if (isNaN(var3) || isNaN(var4) || isNaN(var5) || isNaN(var6)) {
+        alert("Min/Max longitude and latitude must be numbers.");
+        return false;
+    }
+
+    // Check if var7 and var8 are valid dates in the format 'YYYY-MM-DD'
+    var dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!var7.match(dateRegex) || !var8.match(dateRegex)) {
+        alert("Start date and end date must be in the format 'YYYY-MM-DD'.");
+        return false;
+    }
+
+    return true;
+}
+</script>
+
+    
+ <script>
+function checkErrorMessage() {
+    console.log('Checking for error messages...');
+    $.ajax({
+        url: '{% url "check_error_messages" %}',  // Replace with your actual endpoint
+        type: 'GET',
+        success: function(data) {
+            var errorMessageDiv = $('#error-message');
+            console.log('Received data:', data);
+            if (data.error_message === 'ERROR') {
+                errorMessageDiv.text('Invalid input! Container Stopped');
+                $('#error-alert').show();   
+               clearInterval(intervalId2);
+            } else {
+                errorMessageDiv.text('No errors');
+            }
+        }
+    });
+}
+
+// Check for error messages every 5 seconds
+intervalId2 = setInterval(checkErrorMessage, 5000);
+</script>
+
+
+    </script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+function checkJupyterLabStatus() {
+    $.ajax({
+        url: '{% url "check_jupyterlab_status" %}',  
+        type: 'GET',
+        success: function(data) {
+            var statusDiv = $('#jupyterlab-status');
+            var linkDiv = $('#jupyterlab-link');
+            var statusDiv = $('#jupyterlab-status');
+            if (data.status === 'Running') {
+                statusDiv.text('JupyterLab is running');
+                var link = $('<a>', {
+                    text: 'Click here to access JupyterLab',
+                    href: 'http://127.0.0.1:8888/lab',
+                    target: '_blank'
+                });
+                linkDiv.empty(); 
+                linkDiv.append(link); 
+                clearInterval(intervalId);
+            } else {
+                statusDiv.text('Waiting Jupyterlab...');
+                $('#jupyterlab-link').empty(); // Clear the link if JupyterLab is not running
+            }
+        }
+    });
+}
+
+// Check status every 5 seconds
+intervalId = setInterval(checkJupyterLabStatus, 5000);
+</script>
+</head>
+
+<body>
+    <h1>Select Docker Image and Enter Environment Variables</h1>
+
+    <form action="{% url 'run_docker' %}" method="post" onsubmit="return validateForm()">
+        {% csrf_token %}
+        <label for="image">Select Docker Image:</label>
+        <select name="image" id="image">
+            {% for image_tags in available_images %}
+                {% for tag in image_tags %}
+                    <option value="{{ tag }}">{{ tag }}</option>
+                {% endfor %}
+            {% endfor %}
+        </select>
+        <br>
+         <div>
+    <label for="var1">USERNAME:</label>
+    <input type="text" name="var1" id="var1">
+</div>
+<div>
+    <label for="var2">PASSWORD:</label>
+    <input type="text" name="var2" id="var2">
+</div>
+<div>
+    <label for="var3">MIN_LONGITUDE:</label>
+    <input type="text" name="var3" id="var3">
+</div>
+<div>
+    <label for="var4">MIN_LATITUDE:</label>
+    <input type="text" name="var4" id="var4">
+</div>
+<div>
+    <label for="var5">MAX_LONGITUDE:</label>
+    <input type="text" name="var5" id="var5">
+</div>
+<div>
+    <label for="var6">MAX_LATITUDE:</label>
+    <input type="text" name="var6" id="var6">
+</div>
+<div>
+    <label for="var7">START_DATE:</label>
+    <input type="text" name="var7" id="var7">
+</div>
+<div>
+    <label for="var8">END_DATE:</label>
+    <input type="text" name="var8" id="var8">
+</div>
+
+               <br>
+        <input type="submit" name="action" value="Run Docker Container">
+   
+    </form>
+
+<div class="alert alert-danger" id="error-alert" style="display:none;">
+<div id="error-message"></div>
+</div>
+    {% if message %}
+    <div class="alert alert-success">
+       {{ message|safe }}
+    </div>
+{% endif %}
+
+
+
+
+{% if message %}
+    <div class="alert alert-success">
+       <div id="jupyterlab-status">Waiting for Jupyterlab...</div>
+    <div id="jupyterlab-link"></div>
+    </div>
+{% endif %}
+    
+</body>
+</html>
