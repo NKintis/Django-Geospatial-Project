@@ -1,4 +1,7 @@
 # Django-Geospatial-Project
+**Description**
+The Django Geospatial Project leverages pre-built containers and user inputs to streamline the download and processing of Sentinel images. Users select a container image, provide authentication credentials, and input values for the Sentinel image description. Once the image download and processing are complete, the refined data is seamlessly uploaded to JupyterLab, providing users easy access through a provided link.
+
 Steps:
 **1. Download geoproject file**
 
@@ -28,3 +31,5 @@ python3 manage.py runserver
 * MAX_LAT: 38.550313
 * START_DATE: 2018-01-01
 * END_DATE: 2018-01-02 
+
+
