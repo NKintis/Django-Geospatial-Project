@@ -2,25 +2,36 @@
 **Description**
 The Django Geospatial Project leverages pre-built containers and user inputs to streamline the download and processing of Sentinel images. Users select a container image, provide authentication credentials, and input values for the Sentinel image description. Once the image download and processing are complete, the refined data is seamlessly uploaded to JupyterLab, providing users easy access through a provided link.
 
-Steps:
-**1. Download geoproject file**
+Usage Guide:
 
-**2. Run Geoproject in terminal:**
+**1: Download the 'geoproject' Repository**
+
+* Begin by downloading the 'geoproject' repository to your local system.
+
+**2: Launch Geospatial Application**
+
+* Open your terminal and navigate to the 'geoproject' directory.
+    
 ```shell
 cd geoproject
 ```
+
+* Start the application server.
+
 ```shell
 python3 manage.py runserver
 ```
-**3. On the app fill the form with the appropriate values of the sentinel image you want downloaded and processed:**
-* PASSWORD: your passowrd.
-* USERNAME: your username.
-* MIN_LON: bbox value for minimum longitude.
-* MIN_LAT: bbox value for minimum latitude.
-* MAX_LON: bbox value for maximum longitude.
-* MAX_LAT: bbox value for maximum latitude.
-* START_DATE: Starting date of the sentinel image.
-* END_DATE: End date of the setninel image.
+
+**3. Fill out the Form on the app**
+* In the application, complete the form with the relevant details for the Sentinel image you wish to download and process:
+  * PASSWORD: Your passowrd.
+  * USERNAME: Your username.
+  * MIN_LON: Minimum longitude value for the bounding box.
+  * MIN_LAT: Minimum latitude value for the bounding box.
+  * MAX_LON: Maximum longitude value for the bounding box. 
+  * MAX_LAT: Maximum latitude value for the bounding box.
+  * START_DATE: Start date of the Sentinel image (YYYY-MM-DD).
+  * END_DATE: End date of the Sentinel image (YYYY-MM-DD).
 
 **Example:**
 * PASSWORD: Apassword1234.
